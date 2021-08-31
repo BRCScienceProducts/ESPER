@@ -1,6 +1,8 @@
 function [CantMeas,Cant2002]=SimpleCantEstimateLR(Longitude,Latitude,Depth,Dates);
     % Uses output from Siv Lauvset et al's gridded 2002 TTD-based Cant
     % estimates for 2002 to grid to desired locations;
+    % DO NOT USE THIS TO ESTIMATE CANTH FOR ANY OTHER APPLICATIONS.
+    % There is undoubtedly a better way.
     tic
     load Cant2002LEAInterpolantLR.mat  
     % We want latitude distances to count for more than longitude distances
