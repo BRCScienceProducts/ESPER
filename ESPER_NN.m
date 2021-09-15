@@ -1,7 +1,7 @@
 function [Estimates,Uncertainties]= ...
-    ESPER_NN_HB(DesiredVariables,OutputCoordinates,PredictorMeasurements,PredictorTypes, ... % Required inputs
+    ESPER_NN(DesiredVariables,OutputCoordinates,PredictorMeasurements,PredictorTypes, ... % Required inputs
             varargin)                                     % Optional inputs
-%  Version 1.Beta
+%  Version 1
 %
 %  Empirical Seawater Property Estimation Routines: Estimates seawater
 %  properties and estimate uncertainty from combinations of other parameter

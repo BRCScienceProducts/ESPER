@@ -1,7 +1,7 @@
 function [Estimates,Uncertainties,CoefficientsUsed]= ...
-    ESPER_LIR_HB(DesiredVariables,OutputCoordinates,PredictorMeasurements,PredictorTypes, ... % Required inputs
+    ESPER_LIR(DesiredVariables,OutputCoordinates,PredictorMeasurements,PredictorTypes, ... % Required inputs
             varargin)                                     % Optional inputs
-%  Version 3.Beta
+%  ESPER version 1, version 3 of LIRs
 %  
 %  Locally Interpolated Regressions (LIRs) for seawater property
 %  estimation: Estimates seawater properties and estimate uncertainty from
