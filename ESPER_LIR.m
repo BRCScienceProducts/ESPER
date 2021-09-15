@@ -60,22 +60,22 @@ function [Estimates,Uncertainties,CoefficientsUsed]= ...
 % 
 % PredictorMeasurements (required n by y array): 
     % Parameter measurements that will be used to estimate alkalinity.  The
-    % column order (y columns) is arbitrary, but specified by MeasIDVec.
-    % Concentrations should be expressed as micromol per kg seawater unless
-    % PerKgSwTF is set to false in which case they should be expressed as
-    % micromol per L, temperature should be expressed as degrees C, and
-    % salinity should be specified with the unitless convention.  NaN
-    % inputs are acceptable, but will lead to NaN estimates for any
-    % equations that depend on that parameter.
+    % column order (y columns) is arbitrary, but specified by
+    % PredictorTypes. Concentrations should be expressed as micromol per kg
+    % seawater unless PerKgSwTF is set to false in which case they should
+    % be expressed as micromol per L, temperature should be expressed as
+    % degrees C, and salinity should be specified with the unitless
+    % convention.  NaN inputs are acceptable, but will lead to NaN
+    % estimates for any equations that depend on that parameter.
     % 
-% MeasIDVec (required 1 by y vector): 
+% PredictorTypes (required 1 by y vector): 
     % Vector indicating which parameter is placed in each column of the
     % 'PredictorMeasurements' input.  Note that salinity is required for
     % all equations.  If O2 is provided, then temperature or potential
     % temperature must also be provided to convert O2 to AOU. For example,
     % if the first three columns of 'PredictorMeasurements' contain
-    % salinity, silicate, and temperature, then MeasIDVec should equal [1 5
-    % 7].
+    % salinity, silicate, and temperature, then PredictorTypes should equal
+    % [1 5 7].
     % 
     % Input Parameter Key: 
     % 1. Salinity
@@ -139,16 +139,17 @@ function [Estimates,Uncertainties,CoefficientsUsed]= ...
 % MeasUncerts (Optional n by y array or 1 by y vector, default: [0.003 S,
     % 0.003 degrees C (T or theta), 1% P, 1% AOU or O2, 1% Si]: Array of
     % measurement uncertainties (see 'PredictorMeasurements' for units).
-    % Uncertainties should be presented in order indicated by MeasIDVec.
-    % Providing these estimates will improve ESPER_LIR estimate
-    % uncertainties in 'UncertaintyEstimates'. Measurement uncertainties
-    % are a small part of ESPER_LIR estimate uncertainties for WOCE-quality
-    % measurements. However, estimate uncertainty scales with measurement
-    % uncertainty, so it is recommended that measurement uncertainties be
-    % specified for sensor measurements.  If this optional input argument
-    % is not provided, the default WOCE-quality uncertainty is assumed.  If
-    % a 1 by y array is provided then the uncertainty estimates are assumed
-    % to apply uniformly to all input parameter measurements.
+    % Uncertainties should be presented in order indicated by
+    % PredictorTypes. Providing these estimates will improve ESPER_LIR
+    % estimate uncertainties in 'UncertaintyEstimates'. Measurement
+    % uncertainties are a small part of ESPER_LIR estimate uncertainties
+    % for WOCE-quality measurements. However, estimate uncertainty scales
+    % with measurement uncertainty, so it is recommended that measurement
+    % uncertainties be specified for sensor measurements.  If this optional
+    % input argument is not provided, the default WOCE-quality uncertainty
+    % is assumed.  If a 1 by y array is provided then the uncertainty
+    % estimates are assumed to apply uniformly to all input parameter
+    % measurements.
     %
 % pHCalcTF (Optional boolean, default false): 
     % If set to true, LIPHR will recalculate the pH to be a better estimate
