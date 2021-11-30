@@ -246,7 +246,7 @@ end
 % Checking for MeasUncerts input and setting default if not given
 a=strcmpi(varargin,'MeasUncerts');
 if any(a)
-    InputU=varargin{1,logical([0 a(1:end-1)])};
+    MeasUncerts=varargin{1,logical([0 a(1:end-1)])};
     UseDefaultUncertainties=false;
     % Sanity checking the MeasUncerts argument.  This also deals with the
     % possibility that the user has provided a single set of uncertainties
@@ -257,7 +257,7 @@ if any(a)
         if ~(size(MeasUncerts,2)==size(PredictorMeasurements,2))
             error('There are different numbers of columns of input uncertainties and input measurements.')
         end
-        InputU=ones(size(PredictorMeasurements(:,1)))*InputU;              % Copying uncertainty estimates for all estimates if only singular values are provided
+        MeasUncerts=ones(size(PredictorMeasurements(:,1)))*MeasUncerts;              % Copying uncertainty estimates for all estimates if only singular values are provided
     end
     if ~(size(PredictorTypes,2)==size(PredictorMeasurements,2))            % Making sure all provided predictors are identified.
         error('The PredictorTypes input does not have the same number of columns as the PredictorMeasurements input.  This means it is unclear which measurement is in which column.');
@@ -315,7 +315,7 @@ C(C(:,1)<0,1)=rem(C(C(:,1)<0,1,1),360)+360;
 
 % Throwing an error if latitudes are out of the expected range.
 if max(abs(C(:,2)))>90
-    error('ESPER_LIR: A latitude >90 degrees (N or S) has been detected.  Verify latitude is in the 2nd colum of the coordinate input.');
+    error('ESPER_LIR: A latitude >90 degrees (N or S) has been detected.  Verify latitude is in the 2nd column of the coordinate input.');
 end
 
 % Preparing full PredictorMeasurement uncertainty grid
@@ -326,9 +326,9 @@ DefaultUAll(:,PredictorTypes)=PredictorMeasurements* ...
 DefaultUAll(:,ismember(PredictorTypes,[1 2]))=0.003;                       % Then setting additive default uncertainties for T and S.
 DefaultUAll=DefaultUAll(~NaNGridCoords,:);
 if UseDefaultUncertainties==false
-    InputUAll=zeros(size(PredictorMeasurements));
-    InputUAll(:,PredictorTypes)=InputU;
-    InputUAll=max(cat(3,InputUAll, DefaultUAll),[],3);                     % Overriding user provided uncertainties that are smaller than the (minimum) default uncertainties
+    InputUAll=zeros(size(PredictorMeasurements,1),6);                      % Initializing measurement uncertainties
+    InputUAll(:,PredictorTypes)=MeasUncerts;                               % Rearranging user inputs to be in expected order per input parameter key (above)
+    InputUAll=max(cat(3,InputUAll, DefaultUAll),[],3);                     % Overriding user provided uncertainties that are smaller than the (minimum) default uncertainties (see paper for rationale)                                 
 else
     InputUAll=DefaultUAll;
 end  
