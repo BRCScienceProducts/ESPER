@@ -1431,7 +1431,8 @@ pHTol       = 0.0001;  % tolerance for iterations end
 ln10        = log(10); %
 pHx(1:vl,1) = pHGuess; % creates a vector holding the first guess for all samples
 deltapH     = pHTol+1;
-while any(abs(deltapH) > pHTol)
+Iter=1;
+while any(abs(deltapH) > pHTol) & Iter<20
     H         = 10.^(-pHx);
     Denom     = (H.*H + K1F.*H + K1F.*K2F);
     CAlk      = TCx.*K1F.*(H + 2.*K2F)./Denom;
@@ -1455,9 +1456,12 @@ while any(abs(deltapH) > pHTol)
         FF=abs(deltapH)>1; deltapH(FF)=deltapH(FF)./2;
     end
     pHx       = pHx + deltapH; % Is on the same scale as K1 and K2 were calculated...
+    Iter=Iter+1;
 end
+pHx(abs(deltapH) > pHTol)=NaN;
 varargout{1}=pHx;
 end % end nested function
+
 
 
 function varargout=CalculatefCO2fromTCpH(TCx, pHx)

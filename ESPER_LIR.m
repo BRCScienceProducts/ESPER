@@ -347,6 +347,10 @@ MAll(:,PredictorTypes)=PredictorMeasurements(~NaNGridCoords,:);            % Reo
 UAll(:,PredictorTypes)=InputUAll(:,PredictorTypes);                        % This was already limited to viable coordinates for later use.
 EstDates=EstDates(~NaNGridCoords,1);                                       % Limiting Dates to viable coordinates as well
 YouHaveBeenWarnedCanth=false;                                              % Calculating Canth is slow, so this flag is used to make sure it only happens once.
+    
+% Light input range checking
+if (any(MAll(:,1)<5) | any(MAll(:,1)>50)) && VerboseTF==true; disp('Warning: Salinities greater than 50 or less than 5 have been found. ESPER is not intended for seawater with these properties.'); end
+if (any(MAll(:,2)<-5) | any(MAll(:,2)>50)) && VerboseTF==true; disp('Warning: Temperatures greater than 50C or less than -5C have been found. ESPER is not intended for seawater with these properties. Note that ESPER expects temperatures in Centigrade.'); end
 
 % Beginning the iterations through the requested properties
 for PIter=1:p                                                              
@@ -427,7 +431,7 @@ for PIter=1:p
         M(:,4)=M(:,4)./densities;
         M(:,5)=M(:,5)./densities;
     end
-
+    
     % *********************************************************************
     % Beginning treatment of inputs and calculations
     if     Property==1; VName='TA';
@@ -571,10 +575,14 @@ for PIter=1:p
             EstAlk=ESPER_LIR(1,C,M(:,1),1,'Equations',16,'VerboseTF',false);   % Approximating alkalinity for the calculation of impacts of anthropogenic CO2 on pH.  Using equation 16 because it is the only one that is viable regardless of inputs.
             EstSi=zeros(size(EstAlk)); EstP=zeros(size(EstAlk));           % Not very sensitive to these so using a poor estimate
             Pressure=sw_pres(C(:,3),C(:,2));
+%             if any(M:,1)<5 
             for Eq=1:e
                 Out=CO2SYS_ESPER(EstAlk.TA,Est(:,Eq),1,3,M(:,1),Temperature,Temperature,Pressure,Pressure,EstSi,EstP,1,10,3);                        % Calculating DIC for estimated TA and pH
                 OutAdj=CO2SYS_ESPER(EstAlk.TA,Out(:,2)+Cant-Cant2002,1,2,M(:,1),Temperature,Temperature,Pressure,Pressure,EstSi,EstP,1,10,3);   % Recalculating pH after increasing DIC for additional Canth
-                Est(:,Eq)=OutAdj(:,18);
+                Est(:,Eq)=real(OutAdj(:,18));
+                if any(isnan(OutAdj(:,18)))
+                    disp('Warning: CO2SYS took >20 iterations to converge. The corresponding estimate(s) will be NaN. This typically happens when ESPER_LIR is very poorly suited for estimating water with the given properties (e.g., very high or low salinity or estimates in marginal seas).');
+                end
             end
         end
     elseif (Property==2 || Property==3) && UserProvidedDates==false && YouHaveBeenWarnedCanth==false && VerboseTF==true
