@@ -1,7 +1,9 @@
 function [Estimates,Uncertainties,CoefficientsUsed]= ...
     ESPER_LIR(DesiredVariables,OutputCoordinates,PredictorMeasurements,PredictorTypes, ... % Required inputs
             varargin)                                     % Optional inputs
-%  ESPER version 1, version 3 of LIRs
+%  ESPER version 1.01.01, version 3 of LIRs
+%  V1.01 added deep ocean nodes to grid for improved very deep ocean estimates
+%  V1.01.01 added bug fix to files uploaded with 1.01... and updated the example calculation 
 %  
 %  Locally Interpolated Regressions (LIRs) for seawater property
 %  estimation: Estimates seawater properties and estimate uncertainty from
