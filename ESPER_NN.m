@@ -475,9 +475,6 @@ for PIter=1:p
     % Averaging across neural network committee members
     EstAtl=nanmean(EstAtl,3);
     EstOther=nanmean(EstOther,3);
-    % Averaging across neural network committee members
-    EstAtl=nanmean(EstAtl,3);
-    EstOther=nanmean(EstOther,3);
 
     % We do not want information to propagate across the Panama Canal (for
     % instance), so data is carved into two segments... the Atlantic/Arctic
@@ -533,10 +530,11 @@ for PIter=1:p
             PertDiff(:,:,Pred)=Est-PertEst.(VName);
             DefaultPertDiff(:,:,Pred)=Est-DefaultPertEst.(VName);
         end
-        UncertEst=real(...
+        Unc=real(...
             (sum(PertDiff.^2,3)-sum(DefaultPertDiff.^2,3)+...              % Adding the user-provided uncertainties and subtracing the smaller default uncertainties
             EMLR.^2).^(1/2));                                              % Adding baseline methodological uncertainties
-        Uncertainties.(VName)=UncertEst;
+        UncertEst(~NaNGridCoords,:)=Unc;                                   % Inserting new estimates into the full array
+        Uncertainties.(VName)=UncertEst;                                   % Inserting estimates into output structure
     end
     
     % DIC and pH estimates are appropriate for 2002 by default.  Here we
