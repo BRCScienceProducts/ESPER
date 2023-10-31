@@ -313,17 +313,20 @@ end
 % Preparing full PredictorMeasurement uncertainty grid
 DefaultUncertainties=diag([1 1 0.02 0.02 0.02 0.01]);
 DefaultUAll=zeros(size(PredictorMeasurements,1),6);
-DefaultUAll(:,PredictorTypes)=PredictorMeasurements* ...
+PredictorMeasCopy=PredictorMeasurements;
+PredictorMeasCopy(isnan(PredictorMeasCopy))=0;
+DefaultUAll(:,PredictorTypes)=PredictorMeasCopy* ...
     DefaultUncertainties(PredictorTypes,PredictorTypes);                   % Setting multiplicative default uncertainties for P, N, O2, and Si.
 DefaultUAll(:,ismember(PredictorTypes,[1 2]))=0.003;                       % Then setting additive default uncertainties for T and S.
+DefaultUAll(isnan(PredictorMeasurements))=NaN;
 DefaultUAll=DefaultUAll(~NaNGridCoords,:);
 if UseDefaultUncertainties==false
     InputUAll=zeros(size(PredictorMeasurements,1),6);                      % Initializing measurement uncertainties
     InputUAll(:,PredictorTypes)=MeasUncerts;                               % Rearranging user inputs to be in expected order per input parameter key (above)
-    InputUAll=max(cat(3,InputUAll, DefaultUAll),[],3);                     % Overriding user provided uncertainties that are smaller than the (minimum) default uncertainties (see paper for rationale)
+    InputUAll=max(cat(3,InputUAll, DefaultUAll),[],3);                     % Overriding user provided uncertainties that are smaller than the (minimum) default uncertainties (see paper for rationale)                                 
 else
     InputUAll=DefaultUAll;
-end    
+end  
 
 % Making sure all provided predictors are identified.
 if ~(size(PredictorTypes,2)==size(PredictorMeasurements,2))
