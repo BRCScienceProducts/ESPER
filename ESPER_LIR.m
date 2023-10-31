@@ -321,10 +321,11 @@ if max(abs(C(:,2)))>90
 end
 
 % Preparing full PredictorMeasurement uncertainty grid
-DefaultUncertainties=diag([1 1 0.02 0.02 0.02 0.01]);
+DefaultUncertainties=[1 1 0.02 0.02 0.02 0.01];
 DefaultUAll=zeros(size(PredictorMeasurements,1),6);
-DefaultUAll(:,PredictorTypes)=PredictorMeasurements* ...
-    DefaultUncertainties(PredictorTypes,PredictorTypes);                   % Setting multiplicative default uncertainties for P, N, O2, and Si.
+DefaultUAll(:,PredictorTypes)=PredictorMeasurements.* ...
+    repmat(DefaultUncertainties(1,PredictorTypes), ...
+    [size(PredictorMeasurements,1) 1]);                                    % Setting multiplicative default uncertainties for P, N, O2, and Si. This line of code has been the subject of several bugfixes.  Please let me know if it causes any grief in your version of Matlab.
 DefaultUAll(:,ismember(PredictorTypes,[1 2]))=0.003;                       % Then setting additive default uncertainties for T and S.
 DefaultUAll=DefaultUAll(~NaNGridCoords,:);
 if UseDefaultUncertainties==false
