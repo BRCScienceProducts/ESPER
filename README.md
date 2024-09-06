@@ -21,7 +21,7 @@ _LIARv2, LIPHR, LINR citation:_ [_https://doi.org/10.1002/lom3.10232_](https://d
 
 _LIPR, LISIR, LIOR, first described/used: Carter et al., 2021,_ [_https://doi.org/10.1029/2020GB006623_](https://doi.org/10.1029/2020GB006623)
 
-_ESPER\_LIR, ESPER\_NN, and ESPER\_Mixed, submitted._
+_ESPER\_LIR, ESPER\_NN, and ESPER\_Mixed, Carter et al., 2021 https://doi.org/10.1002/lom3.10461
 
 _ESPER\_NN is inspired by CANYON- ____ , which also uses neural networks: Bittig et al. 2018:_ [_https://doi.org/10.3389/fmars.2018.00328_](https://doi.org/10.3389/fmars.2018.00328)
 
